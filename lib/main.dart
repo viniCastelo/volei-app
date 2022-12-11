@@ -6,6 +6,7 @@ import 'package:volei/components/separators/dashed_line_vertical.dart';
 import 'package:volei/components/counter/point_counter.dart';
 import 'package:volei/components/buttons/shift_button.dart';
 import 'package:volei/components/labels/team_title.dart';
+import 'package:volei/model/team.dart';
 
 main() {
   runApp(const MyApp());
@@ -19,45 +20,36 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var pontoA = 0;
-  var pontoB = 0;
+  bool modifiedStyle = false;
+  Team teamA = Team('Equipe - A', Colors.green);
+  Team teamB = Team('Equipe - B', Colors.blue);
 
-  bool standard = true;
-
-  void _incrementA() {
+  void _increment(Function fn) {
     setState(() {
-      pontoA++;
+      fn();
     });
   }
 
-  void _incrementB() {
+  void _decrement(Function fn) {
     setState(() {
-      pontoB++;
+      fn();
     });
   }
 
-  void _decrementA() {
+  void _reset(Function fn) {
     setState(() {
-      if (pontoA > 0) {
-        pontoA--;
-      }
+      fn();
     });
   }
 
-  void _decrementB() {
+  void _changeSide(Function standardState, Function modifyState) {
     setState(() {
-      if (pontoB > 0) {
-        pontoB--;
-      }
-    });
-  }
-
-  void _changeSide() {
-    setState(() {
-      if (standard == true) {
-        standard = false;
+      if (modifiedStyle == false) {
+        standardState();
+        modifiedStyle = true;
       } else {
-        standard = true;
+        modifyState();
+        modifiedStyle = false;
       }
     });
   }
@@ -86,22 +78,24 @@ class _MyAppState extends State<MyApp> {
               padding: const EdgeInsets.only(top: 10),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     flex: 1,
                     child: TeamTitle(
-                      title: 'Equipe - A',
-                      color: Colors.green,
+                      title: teamA.getTitleTeam,
+                      color: teamA.getColor,
                     ),
                   ),
                   ShiftButton(
                     color: Colors.deepPurple,
-                    method: _changeSide,
+                    method: () {
+                      _changeSide(() {}, () {});
+                    },
                   ),
-                  const Expanded(
+                  Expanded(
                     flex: 1,
                     child: TeamTitle(
-                      title: 'Equipe - B',
-                      color: Colors.blue,
+                      title: teamB.getTitleTeam,
+                      color: teamB.getColor,
                     ),
                   ),
                 ],
@@ -124,10 +118,14 @@ class _MyAppState extends State<MyApp> {
                     child: Column(
                       children: [
                         Counter(
-                          value: pontoA,
+                          value: teamA.getPontos,
                           margin: const EdgeInsets.only(left: 93.0),
-                          incrementMethod: _incrementA,
-                          decrementMethod: _decrementA,
+                          incrementMethod: () {
+                            _increment(teamA.increment);
+                          },
+                          decrementMethod: () {
+                            _decrement(teamA.decrement);
+                          },
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 15.0),
@@ -139,9 +137,7 @@ class _MyAppState extends State<MyApp> {
                             ),
                             backgroundColor: Colors.white54,
                             method: () {
-                              setState(() {
-                                pontoA = 0;
-                              });
+                              _reset(teamA.resetPoints);
                             },
                           ),
                         ),
@@ -166,9 +162,13 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         Counter(
                           margin: const EdgeInsets.only(left: 93.0),
-                          value: pontoB,
-                          incrementMethod: _incrementB,
-                          decrementMethod: _decrementB,
+                          value: teamB.getPontos,
+                          incrementMethod: () {
+                            _increment(teamB.increment);
+                          },
+                          decrementMethod: () {
+                            _decrement(teamB.decrement);
+                          },
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 15.0),
@@ -180,9 +180,7 @@ class _MyAppState extends State<MyApp> {
                             ),
                             backgroundColor: Colors.white54,
                             method: () {
-                              setState(() {
-                                pontoB = 0;
-                              });
+                              _reset(teamB.resetPoints);
                             },
                           ),
                         ),
