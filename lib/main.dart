@@ -20,9 +20,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool modifiedStyle = false;
-  Team teamA = Team('Equipe - A', Colors.green);
-  Team teamB = Team('Equipe - B', Colors.blue);
+  Team teamA = Team('Time Verde', Colors.green);
+  Team teamB = Team('Time Azul', Colors.blue);
+
+  Color primaryColor = Colors.deepPurple;
+  Color secondaryColor = Colors.purple;
 
   void _increment(Function fn) {
     setState(() {
@@ -42,14 +44,12 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _changeSide(Function standardState, Function modifyState) {
+  bool isModified = false;
+
+  void _changeSide() {
     setState(() {
-      if (modifiedStyle == false) {
-        standardState();
-        modifiedStyle = true;
-      } else {
-        modifyState();
-        modifiedStyle = false;
+      if ((teamA.getPontos >= 8) || (teamB.getPontos >= 8)) {
+        isModified = !isModified;
       }
     });
   }
@@ -81,21 +81,25 @@ class _MyAppState extends State<MyApp> {
                   Expanded(
                     flex: 1,
                     child: TeamTitle(
-                      title: teamA.getTitleTeam,
-                      color: teamA.getColor,
+                      title: isModified == false
+                          ? teamA.getTitleTeam
+                          : teamB.getTitleTeam,
+                      color:
+                          isModified == false ? teamA.getColor : teamB.getColor,
                     ),
                   ),
                   ShiftButton(
-                    color: Colors.deepPurple,
-                    method: () {
-                      _changeSide(() {}, () {});
-                    },
+                    color: isModified == false ? primaryColor : secondaryColor,
+                    method: _changeSide,
                   ),
                   Expanded(
                     flex: 1,
                     child: TeamTitle(
-                      title: teamB.getTitleTeam,
-                      color: teamB.getColor,
+                      title: isModified == false
+                          ? teamB.getTitleTeam
+                          : teamA.getTitleTeam,
+                      color:
+                          isModified == false ? teamB.getColor : teamA.getColor,
                     ),
                   ),
                 ],
@@ -118,13 +122,19 @@ class _MyAppState extends State<MyApp> {
                     child: Column(
                       children: [
                         Counter(
-                          value: teamA.getPontos,
+                          value: isModified == false
+                              ? teamA.getPontos
+                              : teamB.getPontos,
                           margin: const EdgeInsets.only(left: 93.0),
                           incrementMethod: () {
-                            _increment(teamA.increment);
+                            isModified == false
+                                ? _increment(teamA.increment)
+                                : _increment(teamB.increment);
                           },
                           decrementMethod: () {
-                            _decrement(teamA.decrement);
+                            isModified == false
+                                ? _decrement(teamA.decrement)
+                                : _decrement(teamB.decrement);
                           },
                         ),
                         Container(
@@ -137,7 +147,9 @@ class _MyAppState extends State<MyApp> {
                             ),
                             backgroundColor: Colors.white54,
                             method: () {
-                              _reset(teamA.resetPoints);
+                              isModified == false
+                                  ? _reset(teamA.resetPoints)
+                                  : _reset(teamB.resetPoints);
                             },
                           ),
                         ),
@@ -145,7 +157,9 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                   CustomPaint(
-                    painter: DashedLineVertical(),
+                    painter: DashedLineVertical(
+                      isModified == false ? primaryColor : secondaryColor,
+                    ),
                     size: const Size(0, double.maxFinite),
                   ),
                   PointCounter(
@@ -162,12 +176,18 @@ class _MyAppState extends State<MyApp> {
                       children: [
                         Counter(
                           margin: const EdgeInsets.only(left: 93.0),
-                          value: teamB.getPontos,
+                          value: isModified == false
+                              ? teamB.getPontos
+                              : teamA.getPontos,
                           incrementMethod: () {
-                            _increment(teamB.increment);
+                            isModified == false
+                                ? _increment(teamB.increment)
+                                : _increment(teamA.increment);
                           },
                           decrementMethod: () {
-                            _decrement(teamB.decrement);
+                            isModified == false
+                                ? _decrement(teamB.decrement)
+                                : _decrement(teamA.decrement);
                           },
                         ),
                         Container(
@@ -180,7 +200,9 @@ class _MyAppState extends State<MyApp> {
                             ),
                             backgroundColor: Colors.white54,
                             method: () {
-                              _reset(teamB.resetPoints);
+                              isModified == false
+                                  ? _reset(teamB.resetPoints)
+                                  : _reset(teamA.resetPoints);
                             },
                           ),
                         ),
