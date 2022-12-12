@@ -30,7 +30,7 @@ class Counter extends StatelessWidget {
               value.toString(),
               style: const TextStyle(
                 fontSize: 70.0,
-                color: Colors.cyan,
+                color: Colors.indigoAccent,
               ),
               textAlign: TextAlign.center,
             ),

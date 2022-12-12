@@ -40,6 +40,9 @@ class _MyAppState extends State<MyApp> {
 
   void _reset(Function fn) {
     setState(() {
+      if (teamA.getPontos == 0 && teamB.getPontos == 0) {
+        isModified = false;
+      }
       fn();
     });
   }
@@ -49,7 +52,9 @@ class _MyAppState extends State<MyApp> {
   void _changeSide() {
     setState(() {
       if ((teamA.getPontos >= 8) || (teamB.getPontos >= 8)) {
-        isModified = !isModified;
+        isModified = true;
+      } else {
+        isModified = false;
       }
     });
   }
@@ -68,9 +73,17 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Center(
-            child: Text('🏐 Placar do Jogo 🏐'),
+            child: Text(
+              'Placar do Jogo',
+              style: TextStyle(
+                //fontWeight: FontWeight.bold,
+                fontSize: 22.0,
+              ),
+            ),
           ),
-          backgroundColor: const Color.fromRGBO(5, 25, 51, 25),
+          backgroundColor: isModified == false
+              ? primaryColor
+              : secondaryColor, //const Color.fromRGBO(5, 25, 51, 25),
         ),
         body: Column(
           children: [
@@ -110,7 +123,7 @@ class _MyAppState extends State<MyApp> {
               child: Row(
                 children: [
                   PointCounter(
-                    titlePadLeft: 150.0,
+                    titlePadLeft: 138.0,
                     title: const Text(
                       'Pontuação',
                       style: TextStyle(
@@ -125,7 +138,7 @@ class _MyAppState extends State<MyApp> {
                           value: isModified == false
                               ? teamA.getPontos
                               : teamB.getPontos,
-                          margin: const EdgeInsets.only(left: 93.0),
+                          margin: const EdgeInsets.only(left: 80.0),
                           incrementMethod: () {
                             isModified == false
                                 ? _increment(teamA.increment)
@@ -138,18 +151,25 @@ class _MyAppState extends State<MyApp> {
                           },
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 15.0),
+                          margin: const EdgeInsets.only(top: 15.0, right: 28.0),
                           child: ButtonApp(
                             size: 50,
                             icon: const Icon(
                               Icons.restart_alt,
                               size: 20,
                             ),
-                            backgroundColor: Colors.white54,
+                            backgroundColor: Colors.white70,
                             method: () {
-                              isModified == false
-                                  ? _reset(teamA.resetPoints)
-                                  : _reset(teamB.resetPoints);
+                              if (isModified == true) {
+                                if (teamA.getPontos == 0) {
+                                  _reset(teamB.resetPoints);
+                                  isModified = false;
+                                } else if (teamA.getPontos > 0) {
+                                  _reset(teamB.resetPoints);
+                                }
+                              } else {
+                                _reset(teamA.resetPoints);
+                              }
                             },
                           ),
                         ),
@@ -163,7 +183,7 @@ class _MyAppState extends State<MyApp> {
                     size: const Size(0, double.maxFinite),
                   ),
                   PointCounter(
-                    titlePadLeft: 0,
+                    titlePadLeft: 40,
                     title: const Text(
                       'Pontuação',
                       style: TextStyle(
@@ -175,7 +195,7 @@ class _MyAppState extends State<MyApp> {
                     child: Column(
                       children: [
                         Counter(
-                          margin: const EdgeInsets.only(left: 93.0),
+                          margin: const EdgeInsets.only(left: 110.0),
                           value: isModified == false
                               ? teamB.getPontos
                               : teamA.getPontos,
@@ -191,18 +211,25 @@ class _MyAppState extends State<MyApp> {
                           },
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 15.0),
+                          margin: const EdgeInsets.only(top: 15.0, left: 35.0),
                           child: ButtonApp(
                             size: 50,
                             icon: const Icon(
                               Icons.restart_alt,
                               size: 20,
                             ),
-                            backgroundColor: Colors.white54,
+                            backgroundColor: Colors.white70,
                             method: () {
-                              isModified == false
-                                  ? _reset(teamB.resetPoints)
-                                  : _reset(teamA.resetPoints);
+                              if (isModified == true) {
+                                if (teamB.getPontos == 0) {
+                                  _reset(teamA.resetPoints);
+                                  isModified = false;
+                                } else if (teamB.getPontos > 0) {
+                                  _reset(teamA.resetPoints);
+                                }
+                              } else {
+                                _reset(teamB.resetPoints);
+                              }
                             },
                           ),
                         ),
