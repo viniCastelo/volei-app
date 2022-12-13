@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   Team teamB = Team('Equipe - B', const Color.fromRGBO(255, 194, 57, 1));
 
   Color primaryColor = Colors.blueGrey[200]!;
-  Color secondaryColor = Colors.red[800]!;
+  Color secondaryColor = Colors.red[900]!;
 
   void _increment(Function fn) {
     setState(() {
@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                       'Pontuação',
                       style: TextStyle(
                         fontSize: 25,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                         color: Colors.blueGrey,
                       ),
                     ),
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                       'Pontuação',
                       style: TextStyle(
                           fontSize: 25,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                           color: Colors.blueGrey),
                       textAlign: TextAlign.center,
                     ),
