@@ -21,8 +21,11 @@ class Counter extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ButtonApp(
-              icon: const Icon(Icons.remove),
-              backgroundColor: const Color.fromRGBO(253, 195, 205, 1.0),
+              icon: const Icon(
+                Icons.remove,
+                color: Colors.white,
+              ),
+              backgroundColor: const Color.fromARGB(255, 163, 196, 246),
               method: decrementMethod,
             ),
             SizedBox(
@@ -31,14 +34,17 @@ class Counter extends StatelessWidget {
                 value.toString(),
                 style: const TextStyle(
                   fontSize: 70.0,
-                  color: Colors.indigoAccent,
+                  color: Color.fromARGB(255, 0, 57, 114),
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
             ButtonApp(
-              icon: const Icon(Icons.add),
-              backgroundColor: const Color.fromRGBO(226, 240, 217, 1.0),
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.lightGreen[300]!,
               method: incrementMethod,
             ),
           ],
@@ -46,7 +52,10 @@ class Counter extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 20),
           child: ButtonApp(
-            icon: const Icon(Icons.sync),
+            icon: Icon(
+              Icons.sync,
+              color: Colors.grey[600]!,
+            ),
             backgroundColor: Colors.white70,
             method: resetMethod,
           ),

@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/animation.dart';
 
 class Team {
@@ -5,6 +6,8 @@ class Team {
 
   late final Color _primaryColor;
   late final String _titleTeam;
+  // ignore: unused_field
+  late final ConfettiController _controller = ConfettiController();
 
   Team(this._titleTeam, this._primaryColor);
 
@@ -18,6 +21,10 @@ class Team {
 
   Color get getColor {
     return _primaryColor;
+  }
+
+  ConfettiController get getController {
+    return _controller;
   }
 
   set setTitleTeam(String titleTeam) {

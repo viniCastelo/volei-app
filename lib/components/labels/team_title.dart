@@ -1,9 +1,11 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
 class TeamTitle extends StatelessWidget {
   final String? title;
   final Color? color;
-  const TeamTitle({this.title, this.color = Colors.blue, super.key});
+  final ConfettiWidget? win;
+  const TeamTitle({this.title, this.color = Colors.blue, this.win, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +16,22 @@ class TeamTitle extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         color: color,
       ),
-      child: Center(
-        child: Text(
-          title!,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.bold),
-        ),
+      child: Column(
+        children: [
+          win!,
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Text(
+                title!,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
