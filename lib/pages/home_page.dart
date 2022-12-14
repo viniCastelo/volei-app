@@ -93,6 +93,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (isPlaying == false) {
         fn();
+        _changeSide();
       }
     });
   }
@@ -100,6 +101,7 @@ class _HomePageState extends State<HomePage> {
   void _decrement(Function fn) {
     setState(() {
       fn();
+      _changeSide();
     });
   }
 
