@@ -157,14 +157,17 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   flex: 1,
                   child: TeamTitle(
-                    win: ConfettiWidget(
+                    winMethod: ConfettiWidget(
                       confettiController: teamA.getController,
                       shouldLoop: true,
                       blastDirectionality: BlastDirectionality.explosive,
                     ),
-                    title: isModified == false
+                    team: isModified == false ? teamA : teamB,
+                    /*
+                      title: isModified == false
                         ? teamA.getTitleTeam
                         : teamB.getTitleTeam,
+                    */
                     color:
                         isModified == false ? teamA.getColor : teamB.getColor,
                   ),
@@ -179,14 +182,17 @@ class _HomePageState extends State<HomePage> {
                 Expanded(
                   flex: 1,
                   child: TeamTitle(
-                    win: ConfettiWidget(
+                    winMethod: ConfettiWidget(
                       confettiController: teamB.getController,
                       shouldLoop: true,
                       blastDirectionality: BlastDirectionality.explosive,
                     ),
-                    title: isModified == false
+                    team: isModified == false ? teamB : teamA,
+                    /*
+                      title: isModified == false
                         ? teamB.getTitleTeam
                         : teamA.getTitleTeam,
+                    */
                     color:
                         isModified == false ? teamB.getColor : teamA.getColor,
                   ),

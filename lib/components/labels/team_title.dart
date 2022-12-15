@@ -1,35 +1,52 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:volei/model/team.dart';
+import 'package:volei/util/uppercase_text_formatter.dart';
 
 class TeamTitle extends StatelessWidget {
-  final String? title;
+  final Team? team;
   final Color? color;
-  final ConfettiWidget? win;
-  const TeamTitle({this.title, this.color = Colors.blue, this.win, super.key});
+  final ConfettiWidget? winMethod;
+
+  const TeamTitle({
+    this.team,
+    this.color = Colors.blue,
+    this.winMethod,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 45.0,
+      height: 55.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         color: color,
       ),
       child: Column(
         children: [
-          win!,
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                title!,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold),
-              ),
+          winMethod!,
+          TextField(
+            controller: TextEditingController(
+              text: team!.getTitleTeam.toUpperCase(),
             ),
+            onChanged: (text) {
+              team!.titleTeam(text);
+            },
+            inputFormatters: [
+              UpperCaseTextFormatter(),
+            ],
+            showCursor: false,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(borderSide: BorderSide.none),
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

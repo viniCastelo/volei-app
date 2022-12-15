@@ -5,7 +5,7 @@ class Team {
   late int _pontos = 0;
 
   late final Color _primaryColor;
-  late final String _titleTeam;
+  String _titleTeam;
   // ignore: unused_field
   late final ConfettiController _controller = ConfettiController();
 
@@ -27,7 +27,7 @@ class Team {
     return _controller;
   }
 
-  set setTitleTeam(String titleTeam) {
+  void titleTeam(String titleTeam) {
     _titleTeam = titleTeam;
   }
 
