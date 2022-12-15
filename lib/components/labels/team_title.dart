@@ -19,15 +19,18 @@ class TeamTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 55.0,
+      height: 50.0,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(32.5),
         color: color,
       ),
       child: Column(
         children: [
           winMethod!,
           TextField(
+            enableSuggestions: true,
+            autocorrect: true,
+            scribbleEnabled: true,
             controller: TextEditingController(
               text: team!.getTitleTeam.toUpperCase(),
             ),
@@ -37,14 +40,12 @@ class TeamTitle extends StatelessWidget {
             inputFormatters: [
               UpperCaseTextFormatter(),
             ],
-            showCursor: false,
+            decoration: const InputDecoration(border: InputBorder.none),
+            showCursor: true,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
-            ),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(borderSide: BorderSide.none),
             ),
             textAlign: TextAlign.center,
           ),

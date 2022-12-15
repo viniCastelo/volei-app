@@ -15,8 +15,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Team teamA = Team('Time - A', const Color.fromRGBO(17, 47, 77, 1));
-  Team teamB = Team('Time - B', const Color.fromRGBO(255, 194, 57, 1));
+  Team teamA = Team('TIME - ', const Color.fromRGBO(17, 47, 77, 1));
+  Team teamB = Team('TIME - ', const Color.fromRGBO(255, 194, 57, 1));
 
   Color primaryColor = Colors.grey[400]!;
   Color secondaryColor = Colors.cyan;
@@ -137,6 +137,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Center(
           child: Text(
@@ -151,7 +152,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 8),
             child: Row(
               children: [
                 Expanded(
@@ -161,6 +162,7 @@ class _HomePageState extends State<HomePage> {
                       confettiController: teamA.getController,
                       shouldLoop: true,
                       blastDirectionality: BlastDirectionality.explosive,
+                      emissionFrequency: 0.04,
                     ),
                     team: isModified == false ? teamA : teamB,
                     /*
@@ -186,6 +188,7 @@ class _HomePageState extends State<HomePage> {
                       confettiController: teamB.getController,
                       shouldLoop: true,
                       blastDirectionality: BlastDirectionality.explosive,
+                      emissionFrequency: 0.04,
                     ),
                     team: isModified == false ? teamB : teamA,
                     /*
