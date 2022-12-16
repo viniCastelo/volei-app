@@ -4,13 +4,11 @@ import 'package:volei/model/team.dart';
 import 'package:volei/util/uppercase_text_formatter.dart';
 
 class TeamTitle extends StatelessWidget {
-  final Team? team;
-  final Color? color;
+  final Team team;
   final ConfettiWidget? winMethod;
 
   const TeamTitle({
-    this.team,
-    this.color = Colors.blue,
+    required this.team,
     this.winMethod,
     super.key,
   });
@@ -19,10 +17,10 @@ class TeamTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      height: 50.0,
+      height: 53.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(32.5),
-        color: color,
+        color: team.getColor,
       ),
       child: Column(
         children: [
@@ -32,10 +30,10 @@ class TeamTitle extends StatelessWidget {
             autocorrect: true,
             scribbleEnabled: true,
             controller: TextEditingController(
-              text: team!.getTitleTeam.toUpperCase(),
+              text: team.getTitleTeam.toUpperCase(),
             ),
             onChanged: (text) {
-              team!.titleTeam(text);
+              team.titleTeam = text;
             },
             inputFormatters: [
               UpperCaseTextFormatter(),

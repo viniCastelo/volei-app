@@ -3,9 +3,10 @@ import 'package:flutter/animation.dart';
 
 class Team {
   late int _pontos = 0;
+  late bool _win = false;
 
-  late final Color _primaryColor;
-  String _titleTeam;
+  Color? _primaryColor;
+  String? _titleTeam;
   // ignore: unused_field
   late final ConfettiController _controller = ConfettiController();
 
@@ -16,19 +17,27 @@ class Team {
   }
 
   String get getTitleTeam {
-    return _titleTeam;
+    return _titleTeam!;
   }
 
   Color get getColor {
-    return _primaryColor;
+    return _primaryColor!;
   }
 
   ConfettiController get getController {
     return _controller;
   }
 
-  void titleTeam(String titleTeam) {
+  bool get getWin {
+    return _win;
+  }
+
+  set titleTeam(String titleTeam) {
     _titleTeam = titleTeam;
+  }
+
+  set win(bool status) {
+    _win = status;
   }
 
   set setColor(Color color) {

@@ -6,6 +6,7 @@ import 'package:volei/components/counter/point_counter.dart';
 import 'package:volei/components/labels/team_title.dart';
 import 'package:volei/components/separators/dashed_line_vertical.dart';
 import 'package:volei/model/team.dart';
+import 'package:volei/util/standard_colors.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,47 +16,60 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Team teamA = Team('TIME - ', const Color.fromRGBO(17, 47, 77, 1));
-  Team teamB = Team('TIME - ', const Color.fromRGBO(255, 194, 57, 1));
+  Team teamA = Team('TIME: ', teamMainColor);
+  Team teamB = Team('TIME: ', teamSecondaryColor);
 
-  Color primaryColor = Colors.grey[400]!;
-  Color secondaryColor = Colors.cyan;
+  String standardTitle = 'TIME: ';
 
   bool isModified = false;
   bool isPlaying = false;
 
   var pontosLimite = 15;
 
-  void _validateWin(Team teamA, Team teamB) {
+  void _validateWin(Team primary, Team secondary) {
     setState(() {
-      if ((teamA.getPontos >= 14 && teamB.getPontos >= 14) &&
-          (teamA.getPontos == teamB.getPontos)) {
+      var comparatorPrimary = primary.getPontos - (pontosLimite - 1);
+      var comparatorSecondary = secondary.getPontos - (pontosLimite - 1);
+
+      if (comparatorPrimary == 0 && comparatorSecondary == 0) {
         pontosLimite++;
       }
 
       if (isModified == false) {
-        if (teamA.getPontos == pontosLimite) {
+        if (primary.getPontos == pontosLimite) {
           isPlaying = true;
-          teamA.getController.play();
-        } else if (teamB.getPontos == pontosLimite) {
+          primary.getController.play();
+          primary.win = true;
+          secondary.win = false;
+        } else if (secondary.getPontos == pontosLimite) {
           isPlaying = true;
-          teamB.getController.play();
+          secondary.getController.play();
+          secondary.win = true;
+          primary.win = false;
         } else {
           isPlaying = false;
-          teamA.getController.stop();
-          teamB.getController.stop();
+          primary.win = false;
+          secondary.win = false;
+          primary.getController.stop();
+          secondary.getController.stop();
         }
       } else {
-        if (teamA.getPontos == pontosLimite) {
+        if (primary.getPontos == pontosLimite) {
           isPlaying = true;
-          teamB.getController.play();
-        } else if (teamB.getPontos == pontosLimite) {
+          secondary.getController.play();
+          secondary.win = true;
+          primary.win = false;
+        } else if (secondary.getPontos == pontosLimite) {
           isPlaying = true;
-          teamA.getController.play();
+          primary.getController.play();
+          primary.win = true;
+          secondary.win = false;
         } else {
           isPlaying = false;
-          teamA.getController.stop();
-          teamB.getController.stop();
+          primary.win = false;
+          secondary.win = false;
+          primary.getController.stop();
+          secondary.getController.stop();
         }
       }
     });
@@ -89,28 +103,54 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _increment(Function fn) {
+  void _increment(Team primary, Team secondary) {
     setState(() {
       if (isPlaying == false) {
-        fn();
+        isModified == false ? primary.increment() : secondary.increment();
+        _validateWin(primary, secondary);
         _changeSide();
       }
     });
   }
 
-  void _decrement(Function fn) {
+  void _decrement(Team primary, Team secondary) {
     setState(() {
-      fn();
+      isModified == false ? primary.decrement() : secondary.decrement();
+      _validateWin(primary, secondary);
       _changeSide();
     });
   }
 
-  void _reset(Function fn) {
+  void _fixedWinner(Team primary, Team secondary) {
     setState(() {
-      if (teamA.getPontos == 0 && teamB.getPontos == 0) {
-        isModified = false;
+      if (primary.getWin == true) {
+        primary.titleTeam = secondary.getTitleTeam;
+        secondary.titleTeam = standardTitle;
+        primary.setColor = teamSecondaryColor;
+        secondary.setColor = teamMainColor;
+      } else if (secondary.getWin == true) {
+        secondary.titleTeam = primary.getTitleTeam;
+        primary.titleTeam = standardTitle;
+        secondary.setColor = teamMainColor;
+        primary.setColor = teamSecondaryColor;
       }
-      fn();
+    });
+  }
+
+  void _reset(Team primary, Team secondary) {
+    setState(() {
+      if (isModified == true) {
+        if (primary.getPontos == 0) {
+          _fixedWinner(primary, secondary);
+          secondary.resetPoints();
+          _standardValues();
+        } else if (primary.getPontos > 0) {
+          secondary.resetPoints();
+        }
+      } else {
+        primary.resetPoints();
+        _standardValues();
+      }
     });
   }
 
@@ -124,13 +164,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _standardValues(Team x, Team y) {
+  void _standardValues() {
     setState(() {
       isModified = false;
       isPlaying = false;
       pontosLimite = 15;
-      x.getController.stop();
-      y.getController.stop();
+      teamA.getController.stop();
+      teamB.getController.stop();
     });
   }
 
@@ -147,7 +187,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 0, 57, 114),
+        backgroundColor: appBarMainColor,
       ),
       body: Column(
         children: [
@@ -165,17 +205,12 @@ class _HomePageState extends State<HomePage> {
                       emissionFrequency: 0.04,
                     ),
                     team: isModified == false ? teamA : teamB,
-                    /*
-                      title: isModified == false
-                        ? teamA.getTitleTeam
-                        : teamB.getTitleTeam,
-                    */
-                    color:
-                        isModified == false ? teamA.getColor : teamB.getColor,
                   ),
                 ),
                 ShiftButton(
-                  color: isModified == false ? primaryColor : secondaryColor,
+                  color: isModified == false
+                      ? dividerMainColor
+                      : dividerSecondaryColor,
                   method: () {
                     _changeSide();
                     _validateWin(teamA, teamB);
@@ -191,13 +226,6 @@ class _HomePageState extends State<HomePage> {
                       emissionFrequency: 0.04,
                     ),
                     team: isModified == false ? teamB : teamA,
-                    /*
-                      title: isModified == false
-                        ? teamB.getTitleTeam
-                        : teamA.getTitleTeam,
-                    */
-                    color:
-                        isModified == false ? teamB.getColor : teamA.getColor,
                   ),
                 ),
               ],
@@ -223,29 +251,13 @@ class _HomePageState extends State<HomePage> {
                           ? teamA.getPontos
                           : teamB.getPontos,
                       incrementMethod: () {
-                        isModified == false
-                            ? _increment(teamA.increment)
-                            : _increment(teamB.increment);
-                        _validateWin(teamA, teamB);
+                        _increment(teamA, teamB);
                       },
                       decrementMethod: () {
-                        isModified == false
-                            ? _decrement(teamA.decrement)
-                            : _decrement(teamB.decrement);
-                        _validateWin(teamA, teamB);
+                        _decrement(teamA, teamB);
                       },
                       resetMethod: () {
-                        if (isModified == true) {
-                          if (teamA.getPontos == 0) {
-                            _reset(teamB.resetPoints);
-                            _standardValues(teamA, teamB);
-                          } else if (teamA.getPontos > 0) {
-                            _reset(teamB.resetPoints);
-                          }
-                        } else {
-                          _reset(teamA.resetPoints);
-                          _standardValues(teamA, teamB);
-                        }
+                        _reset(teamA, teamB);
                       },
                     ),
                   ),
@@ -254,7 +266,9 @@ class _HomePageState extends State<HomePage> {
                   flex: 0,
                   child: CustomPaint(
                     painter: DashedLineVertical(
-                      isModified == false ? primaryColor : secondaryColor,
+                      isModified == false
+                          ? dividerMainColor
+                          : dividerSecondaryColor,
                     ),
                     size: const Size(0, double.maxFinite),
                   ),
@@ -277,29 +291,13 @@ class _HomePageState extends State<HomePage> {
                               ? teamB.getPontos
                               : teamA.getPontos,
                           incrementMethod: () {
-                            isModified == false
-                                ? _increment(teamB.increment)
-                                : _increment(teamA.increment);
-                            _validateWin(teamA, teamB);
+                            _increment(teamB, teamA);
                           },
                           decrementMethod: () {
-                            isModified == false
-                                ? _decrement(teamB.decrement)
-                                : _decrement(teamA.decrement);
-                            _validateWin(teamA, teamB);
+                            _decrement(teamB, teamA);
                           },
                           resetMethod: () {
-                            if (isModified == true) {
-                              if (teamB.getPontos == 0) {
-                                _reset(teamA.resetPoints);
-                                _standardValues(teamA, teamB);
-                              } else if (teamB.getPontos > 0) {
-                                _reset(teamA.resetPoints);
-                              }
-                            } else {
-                              _reset(teamB.resetPoints);
-                              _standardValues(teamA, teamB);
-                            }
+                            _reset(teamB, teamA);
                           },
                         ),
                       ],
