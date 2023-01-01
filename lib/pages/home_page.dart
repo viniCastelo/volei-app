@@ -16,10 +16,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Team teamA = Team('TIME: ', teamMainColor);
-  Team teamB = Team('TIME: ', teamSecondaryColor);
+  Team teamA = Team('', teamMainColor);
+  Team teamB = Team('', teamSecondaryColor);
 
-  String standardTitle = 'TIME: ';
+  String standardTitle = '';
 
   bool isModified = false;
   bool isPlaying = false;

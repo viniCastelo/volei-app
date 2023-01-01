@@ -27,8 +27,6 @@ class TeamTitle extends StatelessWidget {
           winMethod!,
           TextField(
             enableSuggestions: true,
-            autocorrect: true,
-            scribbleEnabled: true,
             controller: TextEditingController(
               text: team.getTitleTeam.toUpperCase(),
             ),
@@ -38,12 +36,20 @@ class TeamTitle extends StatelessWidget {
             inputFormatters: [
               UpperCaseTextFormatter(),
             ],
-            decoration: const InputDecoration(border: InputBorder.none),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              hintText: 'digite o nome do time',
+              hintStyle: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+              ),
+            ),
             showCursor: true,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w400,
             ),
             textAlign: TextAlign.center,
           ),
