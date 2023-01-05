@@ -1,6 +1,5 @@
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:volei/model/team.dart';
 import 'package:volei/util/colors/standard_colors.dart';
 import 'package:volei/util/global/global.dart';
