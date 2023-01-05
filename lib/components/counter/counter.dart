@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:volei/components/buttons/button_app.dart';
+import 'package:volei/util/colors/standard_colors.dart';
 
 class Counter extends StatelessWidget {
   final int value;
+  final bool refreshButton;
+  final double? sizeTextValue;
+  final double? sizeButtons;
+  final double? padding;
   final Function()? incrementMethod;
   final Function()? decrementMethod;
   final Function()? resetMethod;
   const Counter({
     required this.value,
+    required this.refreshButton,
+    this.sizeTextValue = 70.0,
+    this.padding = 0.0,
+    this.sizeButtons,
     this.incrementMethod,
     this.decrementMethod,
     this.resetMethod,
@@ -15,6 +24,7 @@ class Counter extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    // double availableWidth = MediaQuery.of(context).size.width;
     return Column(
       children: [
         Row(
@@ -27,14 +37,15 @@ class Counter extends StatelessWidget {
               ),
               backgroundColor: const Color.fromARGB(255, 163, 196, 246),
               method: decrementMethod,
+              size: sizeButtons,
             ),
             SizedBox(
-              width: 120,
+              width: padding!,
               child: Text(
                 value.toString(),
-                style: const TextStyle(
-                  fontSize: 70.0,
-                  color: Color.fromARGB(255, 0, 57, 114),
+                style: TextStyle(
+                  fontSize: sizeTextValue,
+                  color: const Color.fromARGB(255, 0, 57, 114),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -46,20 +57,21 @@ class Counter extends StatelessWidget {
               ),
               backgroundColor: Colors.lightGreen[300]!,
               method: incrementMethod,
+              size: sizeButtons,
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: ButtonApp(
-            icon: Icon(
-              Icons.sync,
-              color: Colors.grey[600]!,
-            ),
-            backgroundColor: Colors.white70,
-            method: resetMethod,
-          ),
-        )
+        refreshButton
+            ? ButtonApp(
+                icon: Icon(
+                  Icons.sync,
+                  color: Colors.grey[600]!,
+                ),
+                backgroundColor: whiteSmoke,
+                method: resetMethod,
+                size: sizeButtons,
+              )
+            : const SizedBox(),
       ],
     );
   }

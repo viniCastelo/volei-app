@@ -1,12 +1,15 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:volei/components/buttons/shift_button.dart';
 import 'package:volei/components/counter/counter.dart';
 import 'package:volei/components/counter/point_counter.dart';
 import 'package:volei/components/labels/team_title.dart';
 import 'package:volei/components/separators/dashed_line_vertical.dart';
 import 'package:volei/model/team.dart';
-import 'package:volei/util/standard_colors.dart';
+import 'package:volei/pages/settings_page.dart';
+import 'package:volei/util/colors/standard_colors.dart';
+import 'package:volei/util/global/global.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,24 +27,22 @@ class _HomePageState extends State<HomePage> {
   bool isModified = false;
   bool isPlaying = false;
 
-  var pontosLimite = 15;
-
   void _validateWin(Team primary, Team secondary) {
     setState(() {
-      var comparatorPrimary = primary.getPontos - (pontosLimite - 1);
-      var comparatorSecondary = secondary.getPontos - (pontosLimite - 1);
+      var comparatorPrimary = primary.getPontos - (Global.scoreLimit - 1);
+      var comparatorSecondary = secondary.getPontos - (Global.scoreLimit - 1);
 
       if (comparatorPrimary == 0 && comparatorSecondary == 0) {
-        pontosLimite++;
+        Global.scoreLimit++;
       }
 
       if (isModified == false) {
-        if (primary.getPontos == pontosLimite) {
+        if (primary.getPontos == Global.scoreLimit) {
           isPlaying = true;
           primary.getController.play();
           primary.win = true;
           secondary.win = false;
-        } else if (secondary.getPontos == pontosLimite) {
+        } else if (secondary.getPontos == Global.scoreLimit) {
           isPlaying = true;
           secondary.getController.play();
           secondary.win = true;
@@ -54,12 +55,12 @@ class _HomePageState extends State<HomePage> {
           secondary.getController.stop();
         }
       } else {
-        if (primary.getPontos == pontosLimite) {
+        if (primary.getPontos == Global.scoreLimit) {
           isPlaying = true;
           secondary.getController.play();
           secondary.win = true;
           primary.win = false;
-        } else if (secondary.getPontos == pontosLimite) {
+        } else if (secondary.getPontos == Global.scoreLimit) {
           isPlaying = true;
           primary.getController.play();
           primary.win = true;
@@ -156,10 +157,13 @@ class _HomePageState extends State<HomePage> {
 
   void _changeSide() {
     setState(() {
-      if ((teamA.getPontos >= 8) || (teamB.getPontos >= 8)) {
-        isModified = true;
-      } else {
-        isModified = false;
+      if (Global.changeSide) {
+        if ((teamA.getPontos >= Global.scoreLimitChangeSide) ||
+            (teamB.getPontos >= Global.scoreLimitChangeSide)) {
+          isModified = true;
+        } else {
+          isModified = false;
+        }
       }
     });
   }
@@ -168,27 +172,27 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       isModified = false;
       isPlaying = false;
-      pontosLimite = 15;
       teamA.getController.stop();
       teamB.getController.stop();
     });
   }
 
+  _displaySettingsPage() {
+    Navigator.push(
+      context,
+      PageTransition(
+        child: const SettingsPage(),
+        type: PageTransitionType.leftToRight,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    double availableWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Placar do Jogo',
-            style: TextStyle(
-              fontSize: 22.0,
-            ),
-          ),
-        ),
-        backgroundColor: appBarMainColor,
-      ),
+      appBar: _appBar(context),
       body: Column(
         children: [
           Padding(
@@ -250,6 +254,9 @@ class _HomePageState extends State<HomePage> {
                       value: isModified == false
                           ? teamA.getPontos
                           : teamB.getPontos,
+                      refreshButton: true,
+                      sizeButtons: 28.0,
+                      padding: availableWidth * 0.15,
                       incrementMethod: () {
                         _increment(teamA, teamB);
                       },
@@ -290,6 +297,9 @@ class _HomePageState extends State<HomePage> {
                           value: isModified == false
                               ? teamB.getPontos
                               : teamA.getPontos,
+                          refreshButton: true,
+                          sizeButtons: 28.0,
+                          padding: availableWidth * 0.15,
                           incrementMethod: () {
                             _increment(teamB, teamA);
                           },
@@ -309,6 +319,38 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    );
+  }
+
+  PreferredSizeWidget _appBar(BuildContext ctx) {
+    double availableWidth = MediaQuery.of(ctx).size.width;
+    return AppBar(
+      title: Center(
+        child: Padding(
+          padding: EdgeInsets.only(left: availableWidth * 0.06),
+          child: const Text(
+            'Placar do Jogo',
+            style: TextStyle(
+              fontSize: 22.0,
+            ),
+          ),
+        ),
+      ),
+      backgroundColor: appBarMainColor,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: IconButton(
+            onPressed: () => _displaySettingsPage(),
+            icon: Icon(
+              Icons.settings,
+              color: white,
+            ),
+            splashRadius: 22.0,
+            tooltip: 'Configurações',
+          ),
+        )
+      ],
     );
   }
 }

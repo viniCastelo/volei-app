@@ -20,6 +20,7 @@ class _MyAppState extends State<MyApp> {
     // Orientação da tela [Horizontal]:
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
     ]);
     // Ocultar barras de status:
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
