@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'package:volei/pages/home_page.dart';
 
-main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    // Orientação da tela [Horizontal]:
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-    // Ocultar barras de status:
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
-  }
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Orientação da tela [Horizontal]:
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+  // Ocultar barras de status:
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  await GetStorage.init();
+  runApp(
+    ThemeProvider(
+      themes: [
+        AppTheme.dark(),
+        AppTheme.light(),
+      ],
+      child: ThemeConsumer(
+        child: Builder(builder: (context) {
+          return GetMaterialApp(
+            theme: ThemeProvider.themeOf(context).data,
+            debugShowCheckedModeBanner: false,
+            home: const HomePage(),
+          );
+        }),
+      ),
+    ),
+  );
 }

@@ -1,23 +1,19 @@
 // ignore_for_file: avoid_unnecessary_containers, unused_import
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:volei/components/card/card_settings.dart';
 import 'package:volei/components/checkbox/switch_text.dart';
 import 'package:volei/components/counter/counter.dart';
 import 'package:volei/components/counter/point_counter.dart';
+import 'package:volei/controllers/home_controller.dart';
 import 'package:volei/util/colors/standard_colors.dart';
-import 'package:volei/util/global/global.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({
     super.key,
   });
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,49 +50,91 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            CardSettings(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              leading: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Pontuação de Vitória',
-                    style: TextStyle(
-                      color: blue,
-                      fontSize: 25.0,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: Text(
-                      'Determina a pontuação que a equipe deverá atingir para obter a vitória.',
+            GetBuilder<HomeController>(builder: (controller) {
+              return CardSettings(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                leading: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Pontuação de Vitória',
                       style: TextStyle(
-                        color: grey,
+                        color: blue,
+                        fontSize: 25.0,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 14.0),
-                    child: SwitchText(
-                      title: 'Permitir +2 pontos para desempate',
-                      information:
-                          'Se esta função estiver habilitada, caso as equipes estejam a 1 ponto de diferença em relação a pontuação de vitória, será determinado +2 a serem atingidos para haver o desempate.',
-                      value: true,
-                      onChanged: (_) {},
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Text(
+                        'Determina a pontuação que a equipe deverá atingir para obter a vitória.',
+                        style: TextStyle(
+                          color: grey,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 14.0),
+                      child: SwitchText(
+                        title: 'Permitir +2 pontos para desempate',
+                        information:
+                            'Se esta função estiver habilitada, caso as equipes estejam a 1 ponto de diferença em relação a pontuação de vitória, será determinado +2 a serem atingidos para haver o desempate.',
+                        value: controller.allowExtendLimit,
+                        onChanged: controller.toogleAllowExtendLimit,
+                      ),
+                    ),
+                  ],
+                ),
+                trailing: Padding(
+                  padding: EdgeInsets.only(bottom: availableHeight * 0.16),
+                  child: PointCounter(
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: SizedBox(
+                        width: 150,
+                        child: FittedBox(
+                          child: Text(
+                            'Pontuação de Vitória',
+                            style: TextStyle(
+                              color: blueGrey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    child: Counter(
+                      value: controller.scoreLimit,
+                      sizeTextValue: 40.0,
+                      padding: availableWidth * 0.10,
+                      refreshButton: false,
+                      incrementMethod: controller.incrementScoreLimit,
+                      decrementMethod: controller.decrementScoreLimit,
                     ),
                   ),
-                ],
-              ),
-              trailing: Padding(
-                padding: EdgeInsets.only(bottom: availableHeight * 0.16),
-                child: PointCounter(
+                ),
+              );
+            }),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Divider(color: blueGrey),
+            ),
+            GetBuilder<HomeController>(builder: (controller) {
+              return CardSettings(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                leading: SwitchText(
+                  title: 'Permitir a mudança de lados',
+                  information:
+                      'Se esta função estiver habilitada, o lado das equipes será modificado no momento em que a pontuação configurada for atingida.',
+                  value: controller.changeSide,
+                  onChanged: controller.toogleChangeSide,
+                ),
+                trailing: PointCounter(
                   title: Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: SizedBox(
                       width: 150,
                       child: FittedBox(
                         child: Text(
-                          'Pontuação de Vitória',
+                          'Pontuação de Lados',
                           style: TextStyle(
                             color: blueGrey,
                           ),
@@ -105,54 +143,16 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   child: Counter(
-                    value: Global.scoreLimit,
+                    value: controller.scoreLimitChangeSide,
                     sizeTextValue: 40.0,
                     padding: availableWidth * 0.10,
                     refreshButton: false,
-                    incrementMethod: () {},
-                    decrementMethod: () {},
+                    incrementMethod: controller.incrementScoreLimitToToogle,
+                    decrementMethod: controller.decrementScoreLimitToToogle,
                   ),
                 ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Divider(color: blueGrey),
-            ),
-            CardSettings(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              leading: SwitchText(
-                title: 'Permitir a mudança de lado',
-                information:
-                    'Se esta função estiver habilitada, o lado das equipes será modificado no momento em que a pontuação configurada for atingida.',
-                value: true,
-                onChanged: (_) {},
-              ),
-              trailing: PointCounter(
-                title: Padding(
-                  padding: const EdgeInsets.only(bottom: 15.0),
-                  child: SizedBox(
-                    width: 150,
-                    child: FittedBox(
-                      child: Text(
-                        'Pontuação de Lados',
-                        style: TextStyle(
-                          color: blueGrey,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                child: Counter(
-                  value: Global.scoreLimitChangeSide,
-                  sizeTextValue: 40.0,
-                  padding: availableWidth * 0.10,
-                  refreshButton: false,
-                  incrementMethod: () {},
-                  decrementMethod: () {},
-                ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),

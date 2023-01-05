@@ -41,10 +41,10 @@ class SwitchText extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w500,
-                    color: black,
+                    //color: black,
                   ),
                 ),
               ),
