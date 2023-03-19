@@ -7,6 +7,7 @@ import 'package:volei/components/checkbox/switch_text.dart';
 import 'package:volei/components/counter/counter.dart';
 import 'package:volei/components/counter/point_counter.dart';
 import 'package:volei/controllers/home_controller.dart';
+import 'package:volei/controllers/settings_controller.dart';
 import 'package:volei/util/colors/standard_colors.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -16,13 +17,24 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar(context),
-      body: _body(context),
+    return GetBuilder<SettingsController>(
+      init: SettingsController(),
+      builder: (controller) {
+        return WillPopScope(
+          onWillPop: _onBackPressed(controller),
+          child: Scaffold(
+            appBar: _appBar(context, controller),
+            body: _body(context, controller),
+          ),
+        );
+      },
     );
   }
 
-  PreferredSizeWidget _appBar(BuildContext ctx) {
+  PreferredSizeWidget _appBar(
+    BuildContext ctx,
+    SettingsController settingsController,
+  ) {
     double availableWidth = MediaQuery.of(ctx).size.width;
     return AppBar(
       title: Center(
@@ -40,7 +52,21 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  _body(BuildContext ctx) {
+  Future<bool> Function() _onBackPressed(
+      SettingsController settingsController) {
+    return () async {
+      // Aqui você pode executar a ação que deseja antes de fechar a rota ou a tela
+      // Por exemplo, salvar dados, exibir um diálogo de confirmação, etc.
+      settingsController.standardScoreLimit();
+      // Se você quiser permitir que a rota ou a tela seja fechada, retorne true
+      return true;
+    };
+  }
+
+  _body(
+    BuildContext ctx,
+    SettingsController settingsController,
+  ) {
     double availableWidth = MediaQuery.of(ctx).size.width;
     double availableHeight = MediaQuery.of(ctx).size.height;
     return Container(
@@ -77,7 +103,7 @@ class SettingsPage extends StatelessWidget {
                       child: SwitchText(
                         title: 'Permitir +2 pontos para desempate',
                         information:
-                            'Se esta função estiver habilitada, caso as equipes estejam a 1 ponto de diferença em relação a pontuação de vitória, será determinado +2 a serem atingidos para haver o desempate.',
+                            'Se esta função estiver habilitada, caso as equipes estejam a 1 ponto de diferença em relação a pontuação de vitória, será determinado +2 pontos a serem atingidos para que haja o desempate.',
                         value: controller.allowExtendLimit,
                         onChanged: controller.toogleAllowExtendLimit,
                       ),
@@ -123,7 +149,7 @@ class SettingsPage extends StatelessWidget {
                 leading: SwitchText(
                   title: 'Permitir a mudança de lados',
                   information:
-                      'Se esta função estiver habilitada, o lado das equipes será modificado no momento em que a pontuação configurada for atingida.',
+                      'Se esta função estiver habilitada, o lado das equipes será modificado no momento em que a pontuação definida for atingida.',
                   value: controller.changeSide,
                   onChanged: controller.toogleChangeSide,
                 ),

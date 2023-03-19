@@ -6,19 +6,36 @@ class Global {
   GetStorage storage = GetStorage();
 
   int _scoreLimit = 15;
+  int _restarScoreLimit = 15;
   int _scoreLimitChangeSide = 8;
   bool _allowExtendLimit = true;
   bool _changeSide = true;
 
   int get scoreLimit => _scoreLimit;
+  int get restartScoreLimit => _restarScoreLimit;
   int get scoreLimitChangeSide => _scoreLimitChangeSide;
 
   bool get allowExtendLimit => _allowExtendLimit;
   bool get changeSide => _changeSide;
 
-  void setScoreLimit(int value) {
+  void set scoreLimit(int value) {
     _scoreLimit = value;
     storage.write('scoreLimit', value);
+  }
+
+  void set restartScoreLimit(int value) {
+    _restarScoreLimit = value;
+    storage.write('restartScoreLimit', value);
+  }
+
+  void setScoreLimit(int value) {
+    scoreLimit = value;
+    storage.write('scoreLimit', value);
+  }
+
+  void setRestartScoreLimite(int value) {
+    restartScoreLimit = value;
+    storage.write('restartScoreLimit', value);
   }
 
   void setScoreLimitChangeSide(int value) {
@@ -45,6 +62,9 @@ class Global {
 
     final xScoreLimit = storage.read('scoreLimit');
     _scoreLimit = int.tryParse(xScoreLimit.toString()) ?? 15;
+
+    final xRestartScoreLimit = storage.read('restartScoreLimit');
+    _restarScoreLimit = int.tryParse(xRestartScoreLimit.toString()) ?? 15;
 
     final xScoreLimitChangeSide = storage.read('scoreLimitChangeSide');
     _scoreLimitChangeSide = int.tryParse(xScoreLimitChangeSide.toString()) ?? 8;

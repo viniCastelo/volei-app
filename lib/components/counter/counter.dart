@@ -45,7 +45,7 @@ class Counter extends StatelessWidget {
                 value.toString(),
                 style: TextStyle(
                   fontSize: sizeTextValue,
-                  color: const Color.fromARGB(255, 0, 57, 114),
+                  // color: const Color.fromARGB(255, 0, 57, 114),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -62,14 +62,17 @@ class Counter extends StatelessWidget {
           ],
         ),
         refreshButton
-            ? ButtonApp(
-                icon: Icon(
-                  Icons.sync,
-                  color: Colors.grey[600]!,
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ButtonApp(
+                  icon: Icon(
+                    Icons.sync,
+                    color: Colors.grey[600]!,
+                  ),
+                  backgroundColor: whiteSmoke,
+                  method: resetMethod,
+                  size: sizeButtons,
                 ),
-                backgroundColor: whiteSmoke,
-                method: resetMethod,
-                size: sizeButtons,
               )
             : const SizedBox(),
       ],

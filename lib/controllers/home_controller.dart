@@ -17,13 +17,15 @@ class HomeController extends GetxController with Global {
   Team get verifyTeam2 => isModified ? teamA : teamB;
 
   void incrementScoreLimit() {
-    setScoreLimit(scoreLimit + 1);
+    scoreLimit = (scoreLimit + 1);
+    //setScoreLimit(scoreLimit + 1);
     update();
   }
 
   void decrementScoreLimit() {
     if (scoreLimit > 1) {
-      setScoreLimit(scoreLimit - 1);
+      scoreLimit = (scoreLimit - 1);
+      //setScoreLimit(scoreLimit - 1);
       update();
     }
   }
@@ -186,10 +188,12 @@ class HomeController extends GetxController with Global {
   }
 
   void standardValues() {
+    getPreferences();
     isModified = false;
     isPlaying = false;
     teamA.getController.stop();
     teamB.getController.stop();
+    setScoreLimit(restartScoreLimit);
     update();
   }
 }

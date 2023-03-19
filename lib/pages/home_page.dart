@@ -73,7 +73,7 @@ class HomePage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w400,
-                              color: Colors.blueGrey,
+                              // color: Colors.blueGrey,
                             ),
                           ),
                           child: Counter(
@@ -115,9 +115,10 @@ class HomePage extends StatelessWidget {
                           title: const Text(
                             'Pontuação',
                             style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.blueGrey),
+                              fontSize: 25,
+                              fontWeight: FontWeight.w400,
+                              // color: Colors.blueGrey,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                           child: Column(
@@ -160,7 +161,7 @@ class HomePage extends StatelessWidget {
     return AppBar(
       title: Center(
         child: Padding(
-          padding: EdgeInsets.only(left: availableWidth * 0.06),
+          padding: EdgeInsets.only(left: availableWidth * 0.11),
           child: const Text(
             'Placar do Jogo',
             style: TextStyle(

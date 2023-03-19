@@ -18,8 +18,8 @@ main() async {
   runApp(
     ThemeProvider(
       themes: [
-        AppTheme.dark(),
         AppTheme.light(),
+        AppTheme.dark(),
       ],
       child: ThemeConsumer(
         child: Builder(builder: (context) {
